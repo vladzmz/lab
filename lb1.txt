@@ -1,0 +1,68 @@
+        #include <stdio.h>
+	#include <stdlib.h>
+	#include <sys/types.h>
+	#include <sys/wait.h>
+	#include <unistd.h>
+	#include <string.h>
+	 
+	
+
+	int main()
+	{
+		for(;;) {	
+			
+		    char string[128];
+		    char *exec_name;
+		    char *str[100];
+		    int index = 0;
+		    int i = 1;
+		    char c;
+		    int letter;
+		    char *Ptr;
+		
+		 
+		    puts("Enter cmd:");
+		
+		 
+		    while ((letter = getchar ( )) != '\n')    
+				string [index++] = letter;
+		    string[index] = 0;
+		    
+		    printf("WRITE CMD: %s\n ", string);
+		    
+		    
+		    Ptr = strtok(string, " ");
+		    
+		    exec_name = Ptr;
+		    str[0] = exec_name;
+		    
+		    while(Ptr){
+		    	 Ptr = strtok(NULL, " ");
+		    	 str[i] = Ptr;
+		    	 
+		     
+		    	 if(str[i] != NULL){
+		    	 	printf("ARG # %d: %s\n ", i,str[i]);
+		    	 }
+		    	 i++;
+		    }
+		      
+		 
+			pid_t pid = fork();
+			
+	
+
+			if (!pid) { 
+		  		 execvp(exec_name,  str);
+			}
+		    
+		     
+			pid = wait(NULL);
+			if (pid == -1) {
+		  		perror("ERR: ");
+		  		return EXIT_FAILURE;
+		    }
+		    puts("------------------------------------------------------------------");
+		}
+	}
+	
