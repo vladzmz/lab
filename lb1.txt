@@ -1,68 +1,58 @@
-        #include <stdio.h>
-	#include <stdlib.h>
-	#include <sys/types.h>
-	#include <sys/wait.h>
-	#include <unistd.h>
-	#include <string.h>
-	 
-	
+ # Включить < stdio.h >
+# Включить < stdlib.h >
+# Включают < SYS / types.h >
+# Включают < SYS / wait.h >
+# Включить < unistd.h >
+# Определение MAX_WORDS 16
+# Определить MAX_LINE 80
 
-	int main()
-	{
-		for(;;) {	
-			
-		    char string[128];
-		    char *exec_name;
-		    char *str[100];
-		    int index = 0;
-		    int i = 1;
-		    char c;
-		    int letter;
-		    char *Ptr;
-		
-		 
-		    puts("Enter cmd:");
-		
-		 
-		    while ((letter = getchar ( )) != '\n')    
-				string [index++] = letter;
-		    string[index] = 0;
-		    
-		    printf("WRITE CMD: %s\n ", string);
-		    
-		    
-		    Ptr = strtok(string, " ");
-		    
-		    exec_name = Ptr;
-		    str[0] = exec_name;
-		    
-		    while(Ptr){
-		    	 Ptr = strtok(NULL, " ");
-		    	 str[i] = Ptr;
-		    	 
-		     
-		    	 if(str[i] != NULL){
-		    	 	printf("ARG # %d: %s\n ", i,str[i]);
-		    	 }
-		    	 i++;
-		    }
-		      
-		 
-			pid_t pid = fork();
-			
-	
+Int главный ()
+{
+INT inword = 0 , г = 0 , J = 0 , ч;
+символ буфера [MAX_WORDS] [MAX_LINE];
+символ * ARGV [MAX_WORDS];
 
-			if (!pid) { 
-		  		 execvp(exec_name,  str);
-			}
-		    
-		     
-			pid = wait(NULL);
-			if (pid == -1) {
-		  		perror("ERR: ");
-		  		return EXIT_FAILURE;
-		    }
-		    puts("------------------------------------------------------------------");
-		}
-	}
-	
+Printf ( " $ " );
+
+в то время как ((ч = GetChar ())! = EOF) {
+если (ч == ' ' || ч == ' \ п ' ) {
+если (inword == 1 ) {
+inword = 0 ;
+буфер [I] [J] = ' \ 0 ' ;
+ARGV [я] = буфер [я]; 
+++ Я; 
+J = 0 ;
+}
+}
+еще {
+буфер [I] [J] = ч; 
+++ J; 
+inword = 1 ;
+}
+если (ч == ' \ п ' ) {
+ARGV [я] = NULL ;
+pid_t PID = вилка ();
+если (! ИДП) {
+// Ребенок филиал
+INT с.в. = execvp (ARGV [ 0 ], ARGV);
+если (ПЖ == - 1 ) {
+PError ( " execvp " );
+вернуть EXIT_FAILURE;
+}
+}
+// Родительский филиал
+PID = ожидание ( NULL );
+если (PID == - 1 ) {
+PError ( " ждать " );
+вернуть EXIT_FAILURE;
+} 
+inword = 0 ;
+I = 0 ;
+J = 0 ;
+Printf ( " $ " ); 
+}
+
+}
+Printf ( " \ п " );
+вернуть EXIT_SUCCESS;
+}
